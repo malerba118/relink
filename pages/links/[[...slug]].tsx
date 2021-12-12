@@ -1,9 +1,27 @@
-import type { NextPage } from "next";
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextPage,
+} from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
 import { useEffect } from "react";
 
-const SeoLink: NextPage = () => {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  console.log(context.query);
+  return {
+    props: {
+      query: context.query,
+    }, // will be passed to the page component as props
+  };
+}
+
+interface SeoLinkProps {
+  query: ParsedUrlQuery;
+}
+
+const SeoLink: NextPage<SeoLinkProps> = ({ query }) => {
   const router = useRouter();
 
   useEffect(() => {
@@ -16,7 +34,7 @@ const SeoLink: NextPage = () => {
         <meta
           name="twitter:card"
           content={
-            router.query.cardType
+            query.cardType
               ? String(router.query.cardType)
               : "summary_large_image"
           }
