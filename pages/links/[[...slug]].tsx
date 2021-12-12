@@ -1,11 +1,26 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const SeoLink: NextPage = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("https://google.com");
+  }, []);
+
   return (
     <>
       <Head>
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:card"
+          content={
+            router.query.cardType
+              ? String(router.query.cardType)
+              : "summary_large_image"
+          }
+        />
         <meta name="twitter:site" content="@vernosapp" />
         <meta name="twitter:creator" content="@vernosapp" />
         <meta name="twitter:title" content="Test Title" />
