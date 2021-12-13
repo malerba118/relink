@@ -41,7 +41,7 @@ const SeoLink: NextPage<SeoLinkProps> = ({ query }) => {
         />
         <meta name="twitter:site" content="@vernosapp" />
         <meta name="twitter:creator" content="@vernosapp" />
-        <meta name="twitter:title" content="Test Title" />
+        <meta name="twitter:title" content="Testtttt Title" />
         <meta name="twitter:description" content="Some test description" />
         <meta
           name="twitter:image"
