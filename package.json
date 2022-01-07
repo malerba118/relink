@@ -9,8 +9,10 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^1.7.4",
-    "@emotion/react": "^11",
-    "@emotion/styled": "^11",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.2.5",
+    "@mui/material": "^5.2.7",
     "@supabase/supabase-js": "^1.28.5",
     "@supabase/ui": "^0.36.2",
     "framer-motion": "^5",
