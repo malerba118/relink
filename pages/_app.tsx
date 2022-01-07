@@ -6,7 +6,10 @@ import { supabase } from "@/client/api/supabase";
 import theme from "../theme";
 import { ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { green, purple } from "@mui/material/colors";
+import { purple } from "@mui/material/colors";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+
+const queryClient = new QueryClient();
 
 const muiTheme = createTheme({
   palette: {
@@ -20,11 +23,13 @@ const muiTheme = createTheme({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Auth.UserContextProvider supabaseClient={supabase}>
-      <ThemeProvider theme={muiTheme}>
-        <ChakraProvider theme={theme}>
-          <Component {...pageProps} />
-        </ChakraProvider>
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={muiTheme}>
+          <ChakraProvider theme={theme}>
+            <Component {...pageProps} />
+          </ChakraProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </Auth.UserContextProvider>
   );
 }
