@@ -1,12 +1,33 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
+import * as api from "@/client/api";
+import { Auth } from "@supabase/ui";
+import { Button } from "@chakra-ui/button";
 
 const Home: NextPage = () => {
+  const { user } = Auth.useUser();
+
   return (
     <div className={styles.container}>
-      <button>Sign In</button>
+      {!user && (
+        <Button
+          onClick={() => {
+            api.auth.signIn();
+          }}
+        >
+          Sign In
+        </Button>
+      )}
+
+      {user && (
+        <Button
+          onClick={() => {
+            api.auth.signOut();
+          }}
+        >
+          Sign Out
+        </Button>
+      )}
     </div>
   );
 };
