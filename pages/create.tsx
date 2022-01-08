@@ -13,13 +13,15 @@ import {
   Button,
   Textarea,
   HStack,
+  Center,
 } from "@chakra-ui/react";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import StepContent from "@mui/material/StepContent";
 import { isValidURL } from "utils";
 import { MediaUploader } from "@/components/MediaUploader";
+import { Radio, RadioGroup } from "@/components/Radio";
+import { LargeTwitterCard } from "@/components/LargeTwitterCard";
 
 interface StepOneProps {
   values: {
@@ -31,30 +33,39 @@ interface StepOneProps {
 
 const StepOne: FC<StepOneProps> = ({ values, onChange, onNext }) => {
   return (
-    <Stack spacing={6}>
-      <Heading>Where should your link redirect to?</Heading>
-      <Box w="400px">
-        <Text mb={2}>Redirect Url</Text>
-        <Input
-          size="lg"
-          variant="filled"
-          placeholder="url..."
-          value={values.redirectUrl}
-          onChange={(e) => {
-            onChange({ ...values, redirectUrl: e.target.value });
-          }}
-        />
-      </Box>
-      <Box>
-        <Button
-          onClick={() => onNext()}
-          colorScheme="purple"
-          isDisabled={!isValidURL(values.redirectUrl)}
-        >
-          Next
-        </Button>
-      </Box>
-    </Stack>
+    <Flex flexDirection="column" spacing={0} h="100%">
+      <Flex h={32} align="end" p={6}>
+        <Heading fontWeight={900}>
+          Where should your link take the user?
+        </Heading>
+      </Flex>
+      <HStack h="calc(100vh - var(--chakra-sizes-32))">
+        <Stack spacing={6} h="100%" minW="420px" p={6} pt={1.5}>
+          <Box>
+            <Text mb={2}>Redirect URL</Text>
+            <Input
+              size="lg"
+              variant="filled"
+              placeholder="https://google.com"
+              value={values.redirectUrl}
+              onChange={(e) => {
+                onChange({ ...values, redirectUrl: e.target.value });
+              }}
+            />
+          </Box>
+          <Box>
+            <Button
+              onClick={() => onNext()}
+              colorScheme="purple"
+              isDisabled={!isValidURL(values.redirectUrl)}
+            >
+              Next
+            </Button>
+          </Box>
+        </Stack>
+        <Center h="100%" w="100%"></Center>
+      </HStack>
+    </Flex>
   );
 };
 
@@ -63,11 +74,13 @@ interface StepTwoProps {
     title: string;
     description: string;
     image: string | null;
+    cardType: "summary" | "summary_large_image";
   };
   onChange: (values: {
     title: string;
     description: string;
     image: string | null;
+    cardType: "summary" | "summary_large_image";
   }) => void;
   onNext: () => void;
   onBack: () => void;
@@ -76,49 +89,82 @@ interface StepTwoProps {
 const StepTwo: FC<StepTwoProps> = ({ values, onChange, onNext, onBack }) => {
   const { user } = Auth.useUser();
   return (
-    <Stack spacing={6}>
-      <Heading>How should your link appear on Twitter?</Heading>
-      <Stack w="400px">
-        <Box>
-          <Text mb={2}>Title</Text>
-          <Input
-            size="lg"
-            variant="filled"
-            placeholder="title..."
-            value={values.title}
-            onChange={(e) => {
-              onChange({ ...values, title: e.target.value });
-            }}
+    <Flex flexDirection="column" spacing={0} h="100%">
+      <Flex h={32} align="end" p={6}>
+        <Heading fontWeight={900}>
+          How should your link appear on Twitter?
+        </Heading>
+      </Flex>
+      <HStack h="calc(100vh - var(--chakra-sizes-32))">
+        <Stack h="100%" overflow="auto" minW="420px" p={6} pt={1.5}>
+          <Stack spacing={6}>
+            <Stack spacing={3}>
+              <Box>
+                <Text mb={2}>Card Type</Text>
+                <RadioGroup
+                  defaultValue={values.cardType}
+                  onChange={(val: any) => {
+                    onChange({
+                      ...values,
+                      cardType: val,
+                    });
+                  }}
+                >
+                  <Radio value="summary_large_image">Stacked</Radio>
+                  <Radio value="summary">Inline</Radio>
+                </RadioGroup>
+              </Box>
+              <Box>
+                <Text mb={2}>Title</Text>
+                <Input
+                  size="lg"
+                  variant="filled"
+                  placeholder="title..."
+                  value={values.title}
+                  onChange={(e) => {
+                    onChange({ ...values, title: e.target.value });
+                  }}
+                />
+              </Box>
+              <Box>
+                <Text mb={2}>Description</Text>
+                <Textarea
+                  size="lg"
+                  variant="filled"
+                  placeholder="description..."
+                  value={values.description}
+                  onChange={(e) => {
+                    onChange({ ...values, description: e.target.value });
+                  }}
+                />
+              </Box>
+              <Box>
+                <Text mb={2}>Image</Text>
+                <MediaUploader
+                  url={values.image}
+                  bucket={`users/${user?.id}`}
+                  onUpload={(url) => onChange({ ...values, image: url })}
+                />
+              </Box>
+            </Stack>
+            <HStack spacing={3}>
+              <Button onClick={() => onBack()}>Back</Button>
+              <Button onClick={() => onNext()} colorScheme="purple">
+                Next
+              </Button>
+            </HStack>
+          </Stack>
+        </Stack>
+        <Center h="100%" w="100%">
+          <LargeTwitterCard
+            image={values.image || "/no-image.svg"}
+            title={values.title}
+            description={values.description}
+            host="relink.page"
           />
-        </Box>
-        <Box>
-          <Text mb={2}>Description</Text>
-          <Textarea
-            size="lg"
-            variant="filled"
-            placeholder="description..."
-            value={values.description}
-            onChange={(e) => {
-              onChange({ ...values, description: e.target.value });
-            }}
-          />
-        </Box>
-        <Box>
-          <Text mb={2}>Image</Text>
-          <MediaUploader
-            url={values.image}
-            bucket={`users/${user?.id}`}
-            onUpload={(url) => onChange({ ...values, image: url })}
-          />
-        </Box>
-      </Stack>
-      <HStack spacing={3}>
-        <Button onClick={() => onBack()}>Back</Button>
-        <Button onClick={() => onNext()} colorScheme="purple">
-          Next
-        </Button>
+        </Center>
       </HStack>
-    </Stack>
+    </Flex>
   );
 };
 
@@ -130,11 +176,12 @@ const CreateLinkPage: NextPage = () => {
     title: "",
     description: "",
     image: null,
+    cardType: "summary_large_image",
   });
 
   return (
-    <Flex minH="100vh" py={36}>
-      <Box w="320px" px={16}>
+    <Flex h="100vh">
+      <Box px={20} py={32}>
         <Stepper activeStep={activeStep} orientation="vertical">
           <Step>
             <StepLabel>
@@ -143,12 +190,12 @@ const CreateLinkPage: NextPage = () => {
           </Step>
           <Step>
             <StepLabel>
-              <Text>Appearance on Twitter</Text>
+              <Text>Appearance</Text>
             </StepLabel>
           </Step>
           <Step>
             <StepLabel>
-              <Text>Link Customization</Text>
+              <Text>Customization</Text>
             </StepLabel>
           </Step>
         </Stepper>

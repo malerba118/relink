@@ -1,5 +1,6 @@
 // 1. import `extendTheme` function
 import { extendTheme, theme as defaultTheme } from "@chakra-ui/react";
+import "@fontsource/montserrat";
 
 // 2. Add your color mode config
 const config = {
@@ -9,6 +10,10 @@ const config = {
 
 // 3. extend the theme
 const theme = extendTheme({
+  fonts: {
+    heading: "Montserrat",
+    body: "Montserrat",
+  },
   config,
   colors: {
     gray: {

@@ -43,7 +43,7 @@ export function MediaUploader({
   onError,
   onUpload,
   className,
-  prompt = "Upload a File",
+  prompt = "Upload an Image",
 }: MediaUploaderProps) {
   const [hovered, setHovered] = useState(false);
 

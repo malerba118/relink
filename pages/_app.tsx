@@ -12,6 +12,9 @@ import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 const queryClient = new QueryClient();
 
 const muiTheme = createTheme({
+  typography: {
+    fontFamily: "Montserrat",
+  },
   palette: {
     mode: "dark",
     primary: {
