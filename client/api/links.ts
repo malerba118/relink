@@ -7,11 +7,36 @@ interface IsAvailableParams {
 }
 
 export async function isAvailable({ subdomain, slug }: IsAvailableParams) {
+  if (!subdomain || !slug) {
+    return false;
+  }
   const response = await supabase
     .from("links")
     .select("*")
-    .eq("slug", slug)
-    .eq("subdomain", subdomain);
+    .eq("subdomain", subdomain)
+    .eq("slug", slug);
   assertResponseOk(response);
   return !response.data?.length;
+}
+
+interface CreateParams {
+  subdomain: string;
+  slug: string;
+  redirect_url: string;
+  title: string;
+  description: string;
+  image: string;
+  card_type: string;
+}
+
+export async function create(payload: CreateParams) {
+  const response = await supabase
+    .from("links")
+    .insert({
+      ...payload,
+      profile_id: supabase.auth.user()?.id,
+    })
+    .single();
+  assertResponseOk(response);
+  return !response.data;
 }

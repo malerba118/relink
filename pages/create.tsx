@@ -17,6 +17,7 @@ import {
   InputGroup,
   InputLeftAddon,
   InputRightElement,
+  Spinner,
 } from "@chakra-ui/react";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -26,6 +27,12 @@ import { MediaUploader } from "@/components/MediaUploader";
 import { Radio, RadioGroup } from "@/components/Radio";
 import { LargeTwitterCard } from "@/components/LargeTwitterCard";
 import { nanoid } from "nanoid";
+import { useMutation, useQuery } from "react-query";
+import { useDebounce } from "use-debounce";
+import {
+  BsFillXCircleFill as ErrorIcon,
+  BsCheckCircleFill as SuccessIcon,
+} from "react-icons/bs";
 
 interface StepOneProps {
   values: {
@@ -184,16 +191,63 @@ const StepTwo: FC<StepTwoProps> = ({ values, onChange, onNext, onBack }) => {
   );
 };
 
+enum AvailbilityState {
+  Unknown,
+  Pending,
+  Available,
+  Unavailable,
+}
+
+const AvailabilityIcon: FC<any> = ({ state }) => {
+  if (state === AvailbilityState.Unknown) {
+    return null;
+  } else if (state === AvailbilityState.Available) {
+    return <SuccessIcon />;
+  } else if (state === AvailbilityState.Unavailable) {
+    return <ErrorIcon />;
+  } else if (state === AvailbilityState.Pending) {
+    return <Spinner size="sm" />;
+  }
+  return null;
+};
+
 interface StepThreeProps {
   values: {
     slug: string;
   };
   onChange: (values: { slug: string }) => void;
   onBack: () => void;
+  onGenerate: () => void;
 }
 
-const StepThree: FC<StepThreeProps> = ({ values, onChange, onBack }) => {
+const StepThree: FC<StepThreeProps> = ({
+  values,
+  onChange,
+  onBack,
+  onGenerate,
+}) => {
   const { user } = Auth.useUser();
+  const [debouncedSlug] = useDebounce(values.slug, 1000);
+
+  const queries = {
+    availability: useQuery([debouncedSlug], () =>
+      api.links.isAvailable({
+        subdomain: user?.user_metadata.user_name,
+        slug: debouncedSlug,
+      })
+    ),
+  };
+
+  let availability: AvailbilityState = AvailbilityState.Unknown;
+  if (values.slug !== debouncedSlug) {
+    availability = AvailbilityState.Unknown;
+  } else if (queries.availability.isLoading) {
+    availability = AvailbilityState.Pending;
+  } else if (queries.availability.data === true) {
+    availability = AvailbilityState.Available;
+  } else if (queries.availability.data === false) {
+    availability = AvailbilityState.Unavailable;
+  }
 
   return (
     <Flex flexDirection="column" spacing={0} h="100%">
@@ -230,7 +284,9 @@ const StepThree: FC<StepThreeProps> = ({ values, onChange, onBack }) => {
                 fontSize="sm"
                 placeholder="slug"
               />
-              <InputRightElement children={<div>hi</div>} />
+              <InputRightElement
+                children={<AvailabilityIcon state={availability} />}
+              />
             </InputGroup>
             {/* <Input
               size="lg"
@@ -244,7 +300,11 @@ const StepThree: FC<StepThreeProps> = ({ values, onChange, onBack }) => {
           </Box>
           <HStack spacing={3}>
             <Button onClick={() => onBack()}>Back</Button>
-            <Button onClick={() => {}} colorScheme="purple">
+            <Button
+              onClick={() => onGenerate()}
+              colorScheme="purple"
+              isDisabled={availability !== AvailbilityState.Available}
+            >
               Generate My Link!
             </Button>
           </HStack>
@@ -266,6 +326,9 @@ const CreateLinkPage: NextPage = () => {
     cardType: "summary_large_image",
   });
   const [stepThreeValues, setStepThreeValues] = useState({ slug: nanoid(8) });
+  const mutations = {
+    createLink: useMutation(api.links.create),
+  };
 
   return (
     <Flex h="100vh">
@@ -309,6 +372,17 @@ const CreateLinkPage: NextPage = () => {
             values={stepThreeValues}
             onChange={setStepThreeValues}
             onBack={() => setActiveStep(1)}
+            onGenerate={() => {
+              mutations.createLink.mutate({
+                subdomain: user?.user_metadata.user_name,
+                slug: stepThreeValues.slug,
+                redirect_url: stepOneValues.redirectUrl,
+                title: stepTwoValues.title,
+                description: stepTwoValues.description,
+                image: stepTwoValues.image,
+                card_type: stepTwoValues.cardType,
+              });
+            }}
           />
         )}
       </Box>
