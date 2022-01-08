@@ -23,7 +23,7 @@ export const LargeTwitterCard: React.FC<LargeTwitterCardProps> = ({
   return (
     <Box
       fontFamily={`-apple-system, "system-ui", "Segoe UI"`}
-      w="500px"
+      w="508px"
       bg="gray.900"
       rounded="xl"
       overflow="hidden"

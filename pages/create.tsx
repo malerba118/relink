@@ -26,6 +26,7 @@ import { isValidURL } from "utils";
 import { MediaUploader } from "@/components/MediaUploader";
 import { Radio, RadioGroup } from "@/components/Radio";
 import { LargeTwitterCard } from "@/components/LargeTwitterCard";
+import { SmallTwitterCard } from "@/components/SmallTwitterCard";
 import { nanoid } from "nanoid";
 import { useMutation, useQuery } from "react-query";
 import { useDebounce } from "use-debounce";
@@ -179,12 +180,22 @@ const StepTwo: FC<StepTwoProps> = ({ values, onChange, onNext, onBack }) => {
           </Stack>
         </Stack>
         <Center h="100%" w="100%">
-          <LargeTwitterCard
-            image={values.image || "/no-image.svg"}
-            title={values.title}
-            description={values.description}
-            host={`${user?.user_metadata.user_name}.relink.page`}
-          />
+          {values.cardType === "summary_large_image" && (
+            <LargeTwitterCard
+              image={values.image || "/no-image.svg"}
+              title={values.title}
+              description={values.description}
+              host={`${user?.user_metadata.user_name}.relink.page`}
+            />
+          )}
+          {values.cardType === "summary" && (
+            <SmallTwitterCard
+              image={values.image || "/no-image.svg"}
+              title={values.title}
+              description={values.description}
+              host={`${user?.user_metadata.user_name}.relink.page`}
+            />
+          )}
         </Center>
       </HStack>
     </Flex>
