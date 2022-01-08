@@ -10,6 +10,24 @@ const config = {
 
 // 3. extend the theme
 const theme = extendTheme({
+  components: {
+    Input: {
+      sizes: {
+        lg: {
+          field: {
+            fontSize: "md",
+          },
+        },
+      },
+    },
+    Textarea: {
+      sizes: {
+        lg: {
+          fontSize: "md",
+        },
+      },
+    },
+  },
   fonts: {
     heading: "Montserrat",
     body: "Montserrat",

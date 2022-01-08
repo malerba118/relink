@@ -4,7 +4,7 @@ import { supabase } from "@/client/api/supabase";
 import { nanoid } from "nanoid";
 import { CloudUploadIcon } from "@heroicons/react/solid";
 import { useMutation } from "react-query";
-import { Spinner, Image, Box, Stack } from "@chakra-ui/react";
+import { Spinner, Image, Box, Stack, Text } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
 
@@ -148,7 +148,11 @@ export function MediaUploader({
               <Box w="24px" h="24px" margin="0 auto">
                 <CloudUploadIcon />
               </Box>
-              {prompt && <p className="text-center">{prompt}</p>}
+              {prompt && (
+                <Text fontSize="md" className="text-center">
+                  {prompt}
+                </Text>
+              )}
             </Stack>
           </motion.div>
         )}

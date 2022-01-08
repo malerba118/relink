@@ -14,6 +14,9 @@ import {
   Textarea,
   HStack,
   Center,
+  InputGroup,
+  InputLeftAddon,
+  InputRightElement,
 } from "@chakra-ui/react";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -22,6 +25,7 @@ import { isValidURL } from "utils";
 import { MediaUploader } from "@/components/MediaUploader";
 import { Radio, RadioGroup } from "@/components/Radio";
 import { LargeTwitterCard } from "@/components/LargeTwitterCard";
+import { nanoid } from "nanoid";
 
 interface StepOneProps {
   values: {
@@ -35,7 +39,13 @@ const StepOne: FC<StepOneProps> = ({ values, onChange, onNext }) => {
   return (
     <Flex flexDirection="column" spacing={0} h="100%">
       <Flex h={32} align="end" p={6}>
-        <Heading fontWeight={900}>
+        <Heading
+          fontWeight={900}
+          style={{
+            WebkitTextStrokeWidth: 1,
+            WebkitTextStrokeColor: "currentColor",
+          }}
+        >
           Where should your link take the user?
         </Heading>
       </Flex>
@@ -91,7 +101,13 @@ const StepTwo: FC<StepTwoProps> = ({ values, onChange, onNext, onBack }) => {
   return (
     <Flex flexDirection="column" spacing={0} h="100%">
       <Flex h={32} align="end" p={6}>
-        <Heading fontWeight={900}>
+        <Heading
+          fontWeight={900}
+          style={{
+            WebkitTextStrokeWidth: 1,
+            WebkitTextStrokeColor: "currentColor",
+          }}
+        >
           How should your link appear on Twitter?
         </Heading>
       </Flex>
@@ -160,9 +176,80 @@ const StepTwo: FC<StepTwoProps> = ({ values, onChange, onNext, onBack }) => {
             image={values.image || "/no-image.svg"}
             title={values.title}
             description={values.description}
-            host="relink.page"
+            host={`${user?.user_metadata.user_name}.relink.page`}
           />
         </Center>
+      </HStack>
+    </Flex>
+  );
+};
+
+interface StepThreeProps {
+  values: {
+    slug: string;
+  };
+  onChange: (values: { slug: string }) => void;
+  onBack: () => void;
+}
+
+const StepThree: FC<StepThreeProps> = ({ values, onChange, onBack }) => {
+  const { user } = Auth.useUser();
+
+  return (
+    <Flex flexDirection="column" spacing={0} h="100%">
+      <Flex h={32} align="end" p={6}>
+        <Heading
+          fontWeight={900}
+          style={{
+            WebkitTextStrokeWidth: 1,
+            WebkitTextStrokeColor: "currentColor",
+          }}
+        >
+          Customize Your Link
+        </Heading>
+      </Flex>
+      <HStack h="calc(100vh - var(--chakra-sizes-32))">
+        <Stack spacing={6} h="100%" minW="500px" p={6} pt={1.5}>
+          <Box>
+            <Text mb={2}>Your Link</Text>
+            <InputGroup size="lg">
+              <InputLeftAddon
+                px={2}
+                fontSize="sm"
+                children={`https://${user?.user_metadata.user_name}.relink.page/`}
+              />
+              <Input
+                value={values.slug}
+                onChange={(e) => {
+                  onChange({
+                    ...values,
+                    slug: e.target.value,
+                  });
+                }}
+                px={2}
+                fontSize="sm"
+                placeholder="slug"
+              />
+              <InputRightElement children={<div>hi</div>} />
+            </InputGroup>
+            {/* <Input
+              size="lg"
+              variant="filled"
+              placeholder="https://google.com"
+              value={values.slug}
+              onChange={(e) => {
+                onChange({ ...values, slug: e.target.value });
+              }}
+            /> */}
+          </Box>
+          <HStack spacing={3}>
+            <Button onClick={() => onBack()}>Back</Button>
+            <Button onClick={() => {}} colorScheme="purple">
+              Generate My Link!
+            </Button>
+          </HStack>
+        </Stack>
+        <Center h="100%" w="100%"></Center>
       </HStack>
     </Flex>
   );
@@ -178,6 +265,7 @@ const CreateLinkPage: NextPage = () => {
     image: null,
     cardType: "summary_large_image",
   });
+  const [stepThreeValues, setStepThreeValues] = useState({ slug: nanoid(8) });
 
   return (
     <Flex h="100vh">
@@ -214,6 +302,13 @@ const CreateLinkPage: NextPage = () => {
             onChange={setStepTwoValues}
             onBack={() => setActiveStep(0)}
             onNext={() => setActiveStep(2)}
+          />
+        )}
+        {activeStep === 2 && (
+          <StepThree
+            values={stepThreeValues}
+            onChange={setStepThreeValues}
+            onBack={() => setActiveStep(1)}
           />
         )}
       </Box>
