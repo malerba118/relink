@@ -1,11 +1,17 @@
 import type { NextPage } from "next";
+import { FC } from "react";
 import styles from "../styles/Home.module.css";
 import * as api from "@/client/api";
 import { Auth } from "@supabase/ui";
-import { Button, Box, Flex, Heading } from "@chakra-ui/react";
+import { Button, Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import Link from "next/link";
+import { useQuery } from "react-query";
 
-const LinkList = () => {
+interface LinkListProps {
+  links: api.types.Link[];
+}
+
+const LinkList: FC<LinkListProps> = ({ links }) => {
   return (
     <Box>
       <Flex justify="space-between">
@@ -16,6 +22,13 @@ const LinkList = () => {
           </Button>
         </Link>
       </Flex>
+      <Stack>
+        {links.map((link) => (
+          <Text color="white" key={link.id}>
+            {link.slug}
+          </Text>
+        ))}
+      </Stack>
     </Box>
   );
 };
@@ -62,6 +75,17 @@ const Toolbar = () => {
 
 const Home: NextPage = () => {
   const { user } = Auth.useUser();
+  const queries = {
+    links: useQuery(
+      ["links", { profile_id: user?.id }],
+      () => {
+        return api.links.list({ profile_id: user?.id });
+      },
+      {
+        enabled: !!user?.id,
+      }
+    ),
+  };
 
   return (
     <Box>
@@ -69,7 +93,7 @@ const Home: NextPage = () => {
       {user && (
         <Box p={16}>
           <Box maxW="700px" margin="0 auto">
-            <LinkList />
+            {queries.links.data && <LinkList links={queries.links.data} />}
           </Box>
         </Box>
       )}

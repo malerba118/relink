@@ -1,3 +1,5 @@
+import * as api from "@/client/api";
+
 // will need this to bust link cache (can add param ?t=getTimeOfDayInSeconds())
 export const getTimeOfDayInSeconds = (): number => {
   const now = new Date();
@@ -10,3 +12,7 @@ export function isValidURL(value: string) {
   );
   return res !== null;
 }
+
+export const buildUrlFromLink = (link: api.types.Link) => {
+  return `https://${link.subdomain}.relink.page/${link.slug}`;
+};

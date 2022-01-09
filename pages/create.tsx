@@ -1,6 +1,6 @@
 import styles from "../styles/Home.module.css";
 import type { NextPage } from "next";
-import { useState, FC } from "react";
+import { useState, useEffect, FC } from "react";
 import * as api from "@/client/api";
 import { Auth } from "@supabase/ui";
 import {
@@ -18,11 +18,15 @@ import {
   InputLeftAddon,
   InputRightElement,
   Spinner,
+  IconButton,
+  Icon,
+  Tooltip,
+  useClipboard,
 } from "@chakra-ui/react";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import { isValidURL } from "utils";
+import { buildUrlFromLink, isValidURL } from "utils";
 import { MediaUploader } from "@/components/MediaUploader";
 import { Radio, RadioGroup } from "@/components/Radio";
 import { LargeTwitterCard } from "@/components/LargeTwitterCard";
@@ -34,6 +38,7 @@ import {
   BsFillXCircleFill as ErrorIcon,
   BsCheckCircleFill as SuccessIcon,
 } from "react-icons/bs";
+import { BiCopy as CopyIcon } from "react-icons/bi";
 
 interface StepOneProps {
   values: {
@@ -229,6 +234,7 @@ interface StepThreeProps {
   onChange: (values: { slug: string }) => void;
   onBack: () => void;
   onGenerate: () => void;
+  createLinkMutation: any;
 }
 
 const StepThree: FC<StepThreeProps> = ({
@@ -236,6 +242,7 @@ const StepThree: FC<StepThreeProps> = ({
   onChange,
   onBack,
   onGenerate,
+  createLinkMutation,
 }) => {
   const { user } = Auth.useUser();
   const [debouncedSlug] = useDebounce(values.slug, 1000);
@@ -315,9 +322,67 @@ const StepThree: FC<StepThreeProps> = ({
               onClick={() => onGenerate()}
               colorScheme="purple"
               isDisabled={availability !== AvailbilityState.Available}
+              isLoading={createLinkMutation.isLoading}
             >
               Generate My Link!
             </Button>
+          </HStack>
+        </Stack>
+        <Center h="100%" w="100%"></Center>
+      </HStack>
+    </Flex>
+  );
+};
+
+interface StepFourProps {
+  link: api.types.Link;
+}
+
+const StepFour: FC<StepFourProps> = ({ link }) => {
+  const url = buildUrlFromLink(link);
+  const { hasCopied, onCopy } = useClipboard(url);
+
+  return (
+    <Flex flexDirection="column" spacing={0} h="100%">
+      <Flex h={32} align="end" p={6}>
+        <Heading
+          fontWeight={900}
+          style={{
+            WebkitTextStrokeWidth: 1,
+            WebkitTextStrokeColor: "currentColor",
+          }}
+        >
+          Your Link Has Been Generated!
+        </Heading>
+      </Flex>
+      <HStack h="calc(100vh - var(--chakra-sizes-32))">
+        <Stack spacing={6} h="100%" minW="500px" p={6} pt={1.5}>
+          <Box>
+            <Text mb={2}>Your Link</Text>
+            <InputGroup>
+              <Input
+                size="lg"
+                variant="filled"
+                placeholder="https://google.com"
+                isReadOnly
+                value={url}
+              />
+              <InputRightElement as={Center} m={1}>
+                <Tooltip
+                  placement="top"
+                  label={hasCopied ? "Copied!" : "Copy Link"}
+                >
+                  <IconButton
+                    onClick={onCopy}
+                    aria-label="Copy"
+                    icon={<Icon as={CopyIcon} />}
+                  />
+                </Tooltip>
+              </InputRightElement>
+            </InputGroup>
+          </Box>
+          <HStack spacing={3}>
+            <Button onClick={() => {}}>Back to My Links</Button>
           </HStack>
         </Stack>
         <Center h="100%" w="100%"></Center>
@@ -340,6 +405,12 @@ const CreateLinkPage: NextPage = () => {
   const mutations = {
     createLink: useMutation(api.links.create),
   };
+
+  useEffect(() => {
+    if (mutations.createLink.data) {
+      setActiveStep(3);
+    }
+  }, [mutations.createLink.data]);
 
   return (
     <Flex h="100vh">
@@ -394,7 +465,11 @@ const CreateLinkPage: NextPage = () => {
                 card_type: stepTwoValues.cardType,
               });
             }}
+            createLinkMutation={mutations.createLink}
           />
+        )}
+        {activeStep === 3 && mutations.createLink.data && (
+          <StepFour link={mutations.createLink.data} />
         )}
       </Box>
     </Flex>
