@@ -8,4 +8,6 @@ export interface Link {
   image: string;
   card_type: string;
   profile_id: string;
+  updated_at: string;
+  created_at: string;
 }

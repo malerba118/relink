@@ -54,6 +54,8 @@ export async function list(params: ListParams = {}) {
     query = query.eq("profile_id", params.profile_id);
   }
 
+  query = query.order("updated_at", { ascending: false });
+
   const response = await query;
   assertResponseOk(response);
   return response.data;

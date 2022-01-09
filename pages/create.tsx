@@ -39,6 +39,7 @@ import {
   BsCheckCircleFill as SuccessIcon,
 } from "react-icons/bs";
 import { BiCopy as CopyIcon } from "react-icons/bi";
+import { useRouter } from "next/router";
 
 interface StepOneProps {
   values: {
@@ -139,8 +140,8 @@ const StepTwo: FC<StepTwoProps> = ({ values, onChange, onNext, onBack }) => {
                     });
                   }}
                 >
-                  <Radio value="summary_large_image">Stacked</Radio>
-                  <Radio value="summary">Inline</Radio>
+                  <Radio value="summary_large_image">Large</Radio>
+                  <Radio value="summary">Small</Radio>
                 </RadioGroup>
               </Box>
               <Box>
@@ -341,6 +342,7 @@ interface StepFourProps {
 const StepFour: FC<StepFourProps> = ({ link }) => {
   const url = buildUrlFromLink(link);
   const { hasCopied, onCopy } = useClipboard(url);
+  const router = useRouter();
 
   return (
     <Flex flexDirection="column" spacing={0} h="100%">
@@ -382,7 +384,13 @@ const StepFour: FC<StepFourProps> = ({ link }) => {
             </InputGroup>
           </Box>
           <HStack spacing={3}>
-            <Button onClick={() => {}}>Back to My Links</Button>
+            <Button
+              onClick={() => {
+                router.push("/");
+              }}
+            >
+              Back to My Links
+            </Button>
           </HStack>
         </Stack>
         <Center h="100%" w="100%"></Center>

@@ -7,6 +7,24 @@ import { Button, Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { useQuery } from "react-query";
 
+interface LinkItemProps {
+  link: api.types.Link;
+}
+
+const LinkItem: FC<LinkItemProps> = ({ link }) => {
+  return (
+    <Stack p={6} bg="whiteAlpha.50" rounded="lg">
+      <Heading size="sm" color="gray.50">
+        {link.title}
+      </Heading>
+      <Text color="gray.500">{link.description}</Text>
+      <Text fontWeight="bold" color="gray.500">
+        {link.redirect_url}
+      </Text>
+    </Stack>
+  );
+};
+
 interface LinkListProps {
   links: api.types.Link[];
 }
@@ -14,7 +32,7 @@ interface LinkListProps {
 const LinkList: FC<LinkListProps> = ({ links }) => {
   return (
     <Box>
-      <Flex justify="space-between">
+      <Flex justify="space-between" mb={6}>
         <Heading>Your Links</Heading>
         <Link href="/create">
           <Button colorScheme="purple" variant="outline" size="md">
@@ -22,11 +40,9 @@ const LinkList: FC<LinkListProps> = ({ links }) => {
           </Button>
         </Link>
       </Flex>
-      <Stack>
+      <Stack spacing={4}>
         {links.map((link) => (
-          <Text color="white" key={link.id}>
-            {link.slug}
-          </Text>
+          <LinkItem key={link.id} link={link} />
         ))}
       </Stack>
     </Box>
@@ -91,7 +107,7 @@ const Home: NextPage = () => {
     <Box>
       <Toolbar />
       {user && (
-        <Box p={16}>
+        <Box py={24} px={8}>
           <Box maxW="700px" margin="0 auto">
             {queries.links.data && <LinkList links={queries.links.data} />}
           </Box>
