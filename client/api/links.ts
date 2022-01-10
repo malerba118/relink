@@ -60,3 +60,14 @@ export async function list(params: ListParams = {}) {
   assertResponseOk(response);
   return response.data;
 }
+
+export async function getBySubdomainAndSlug(subdomain: string, slug: string) {
+  const response = await supabase
+    .from<Link>("links")
+    .select("*")
+    .eq("subdomain", subdomain)
+    .eq("slug", slug)
+    .single();
+  assertResponseOk(response);
+  return response.data;
+}

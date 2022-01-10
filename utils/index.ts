@@ -16,3 +16,11 @@ export function isValidURL(value: string) {
 export const buildUrlFromLink = (link: api.types.Link) => {
   return `https://${link.subdomain}.relink.page/${link.slug}`;
 };
+
+export const getSubdomain = (host: string) => {
+  if (process.env.NODE_ENV === "development") {
+    return host.split(".").slice(0, -1).join(".");
+  } else {
+    return host.split(".").slice(0, -2).join(".");
+  }
+};
