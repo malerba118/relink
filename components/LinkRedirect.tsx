@@ -1,5 +1,5 @@
 import * as api from "@/client/api";
-import { Center } from "@chakra-ui/react";
+import { Center, Heading, Text, Box } from "@chakra-ui/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -10,7 +10,12 @@ interface LinkRedirectProps {
 
 export const LinkRedirect: React.FC<LinkRedirectProps> = ({ link }) => {
   useEffect(() => {
-    window.location.href = link.redirect_url;
+    // window.location.href = link.redirect_url;
+    if (link.redirect_url.includes("://")) {
+      window.location.href = link.redirect_url;
+    } else {
+      window.location.href = "https://" + link.redirect_url;
+    }
   }, [link.redirect_url]);
 
   return (
@@ -23,11 +28,17 @@ export const LinkRedirect: React.FC<LinkRedirectProps> = ({ link }) => {
         <meta name="twitter:description" content={link.description} />
         <meta name="twitter:image" content={link.image} />
       </Head>
-      <Center h="100vh">
-        Redirecting to{" "}
-        <Link href={link.redirect_url} passHref={false}>
-          {link.redirect_url}
-        </Link>
+      <Center flexDirection="column" h="100vh">
+        <Box>
+          <Text>
+            Redirecting to{" "}
+            <Link href={link.redirect_url} passHref={false}>
+              <Text as="span" textDecoration="underline">
+                {link.redirect_url}
+              </Text>
+            </Link>
+          </Text>
+        </Box>
       </Center>
     </>
   );

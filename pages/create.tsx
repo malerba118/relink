@@ -1,4 +1,3 @@
-import styles from "../styles/Home.module.css";
 import type { NextPage } from "next";
 import { useState, useEffect, FC } from "react";
 import * as api from "@/client/api";
@@ -18,10 +17,6 @@ import {
   InputLeftAddon,
   InputRightElement,
   Spinner,
-  IconButton,
-  Icon,
-  Tooltip,
-  useClipboard,
 } from "@chakra-ui/react";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -38,8 +33,8 @@ import {
   BsFillXCircleFill as ErrorIcon,
   BsCheckCircleFill as SuccessIcon,
 } from "react-icons/bs";
-import { BiCopy as CopyIcon } from "react-icons/bi";
 import { useRouter } from "next/router";
+import LinkCopyButton from "@/components/LinkCopyButton";
 
 interface StepOneProps {
   values: {
@@ -191,7 +186,7 @@ const StepTwo: FC<StepTwoProps> = ({ values, onChange, onNext, onBack }) => {
               image={values.image || "/no-image.svg"}
               title={values.title}
               description={values.description}
-              host={`${user?.user_metadata.user_name}.relink.page`}
+              host={`relink.page`}
             />
           )}
           {values.cardType === "summary" && (
@@ -199,7 +194,7 @@ const StepTwo: FC<StepTwoProps> = ({ values, onChange, onNext, onBack }) => {
               image={values.image || "/no-image.svg"}
               title={values.title}
               description={values.description}
-              host={`${user?.user_metadata.user_name}.relink.page`}
+              host={`relink.page`}
             />
           )}
         </Center>
@@ -251,7 +246,6 @@ const StepThree: FC<StepThreeProps> = ({
   const queries = {
     availability: useQuery([debouncedSlug], () =>
       api.links.isAvailable({
-        subdomain: user?.user_metadata.user_name,
         slug: debouncedSlug,
       })
     ),
@@ -287,7 +281,7 @@ const StepThree: FC<StepThreeProps> = ({
             <Text mb={2}>Your Link</Text>
             <InputGroup size="lg">
               <InputLeftAddon px={2} fontSize="sm">
-                {`https://${user?.user_metadata.user_name}.relink.page/`}
+                {`https://relink.page/links/`}
               </InputLeftAddon>
               <Input
                 value={values.slug}
@@ -339,7 +333,6 @@ interface StepFourProps {
 
 const StepFour: FC<StepFourProps> = ({ link }) => {
   const url = buildUrlFromLink(link);
-  const { hasCopied, onCopy } = useClipboard(url);
   const router = useRouter();
 
   return (
@@ -368,16 +361,7 @@ const StepFour: FC<StepFourProps> = ({ link }) => {
                 value={url}
               />
               <InputRightElement as={Center} m={1}>
-                <Tooltip
-                  placement="top"
-                  label={hasCopied ? "Copied!" : "Copy Link"}
-                >
-                  <IconButton
-                    onClick={onCopy}
-                    aria-label="Copy"
-                    icon={<Icon as={CopyIcon} />}
-                  />
-                </Tooltip>
+                <LinkCopyButton link={link} />
               </InputRightElement>
             </InputGroup>
           </Box>
@@ -462,7 +446,6 @@ const CreateLinkPage: NextPage = () => {
             onBack={() => setActiveStep(1)}
             onGenerate={() => {
               mutations.createLink.mutate({
-                subdomain: user?.user_metadata.user_name,
                 slug: stepThreeValues.slug,
                 redirect_url: stepOneValues.redirectUrl,
                 title: stepTwoValues.title,

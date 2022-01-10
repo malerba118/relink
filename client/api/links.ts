@@ -4,25 +4,19 @@ import { Link } from "./types";
 import { assertResponseOk } from "./utils";
 
 interface IsAvailableParams {
-  subdomain: string;
   slug: string;
 }
 
-export async function isAvailable({ subdomain, slug }: IsAvailableParams) {
-  if (!subdomain || !slug) {
+export async function isAvailable({ slug }: IsAvailableParams) {
+  if (!slug) {
     return false;
   }
-  const response = await supabase
-    .from("links")
-    .select("*")
-    .eq("subdomain", subdomain)
-    .eq("slug", slug);
+  const response = await supabase.from("links").select("*").eq("slug", slug);
   assertResponseOk(response);
   return !response.data?.length;
 }
 
 interface CreateParams {
-  subdomain: string;
   slug: string;
   redirect_url: string;
   title: string;
@@ -61,11 +55,10 @@ export async function list(params: ListParams = {}) {
   return response.data;
 }
 
-export async function getBySubdomainAndSlug(subdomain: string, slug: string) {
+export async function getBySlug(slug: string) {
   const response = await supabase
     .from<Link>("links")
     .select("*")
-    .eq("subdomain", subdomain)
     .eq("slug", slug)
     .single();
   assertResponseOk(response);

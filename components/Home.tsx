@@ -1,9 +1,18 @@
 import { FC } from "react";
 import * as api from "@/client/api";
 import { Auth } from "@supabase/ui";
-import { Button, Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Box,
+  Flex,
+  Heading,
+  Stack,
+  Text,
+  HStack,
+} from "@chakra-ui/react";
 import Link from "next/link";
 import { useQuery } from "react-query";
+import LinkCopyButton from "./LinkCopyButton";
 
 interface LinkItemProps {
   link: api.types.Link;
@@ -11,7 +20,10 @@ interface LinkItemProps {
 
 const LinkItem: FC<LinkItemProps> = ({ link }) => {
   return (
-    <Stack p={6} bg="whiteAlpha.50" rounded="lg">
+    <Stack pos="relative" p={6} bg="whiteAlpha.50" rounded="lg">
+      <HStack pos="absolute" top={2} right={2}>
+        <LinkCopyButton link={link} />
+      </HStack>
       <Heading size="sm" color="gray.50">
         {link.title}
       </Heading>
