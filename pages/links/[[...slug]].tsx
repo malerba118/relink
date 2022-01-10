@@ -24,9 +24,9 @@ interface SeoLinkProps {
 const SeoLink: NextPage<SeoLinkProps> = ({ query }) => {
   const router = useRouter();
 
-  useEffect(() => {
-    router.push("https://google.com");
-  }, []);
+  // useEffect(() => {
+  //   router.push("https://google.com");
+  // }, []);
 
   return (
     <>

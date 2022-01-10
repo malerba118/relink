@@ -24,7 +24,10 @@ export const LinkRedirect: React.FC<LinkRedirectProps> = ({ link }) => {
         <meta name="twitter:image" content={link.image} />
       </Head>
       <Center h="100vh">
-        Redirecting to <Link>{link.redirect_url}</Link>
+        Redirecting to{" "}
+        <Link href={link.redirect_url} passHref={false}>
+          {link.redirect_url}
+        </Link>
       </Center>
     </>
   );

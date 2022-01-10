@@ -286,11 +286,9 @@ const StepThree: FC<StepThreeProps> = ({
           <Box>
             <Text mb={2}>Your Link</Text>
             <InputGroup size="lg">
-              <InputLeftAddon
-                px={2}
-                fontSize="sm"
-                children={`https://${user?.user_metadata.user_name}.relink.page/`}
-              />
+              <InputLeftAddon px={2} fontSize="sm">
+                {`https://${user?.user_metadata.user_name}.relink.page/`}
+              </InputLeftAddon>
               <Input
                 value={values.slug}
                 onChange={(e) => {
@@ -303,9 +301,9 @@ const StepThree: FC<StepThreeProps> = ({
                 fontSize="sm"
                 placeholder="slug"
               />
-              <InputRightElement
-                children={<AvailabilityIcon state={availability} />}
-              />
+              <InputRightElement>
+                <AvailabilityIcon state={availability} />
+              </InputRightElement>
             </InputGroup>
             {/* <Input
               size="lg"

@@ -32,7 +32,7 @@ const LinkList: FC<LinkListProps> = ({ links }) => {
     <Box>
       <Flex justify="space-between" mb={6}>
         <Heading>Your Links</Heading>
-        <Link href="/create">
+        <Link href="/create" passHref={false}>
           <Button colorScheme="purple" variant="outline" size="md">
             Create a Link
           </Button>
