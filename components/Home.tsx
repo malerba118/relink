@@ -12,6 +12,8 @@ import {
   IconButton,
   Tooltip,
   Image,
+  Center,
+  Spinner,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useQuery } from "react-query";
@@ -56,6 +58,19 @@ interface LinkListProps {
 }
 
 const LinkList: FC<LinkListProps> = ({ links }) => {
+  const { user } = Auth.useUser();
+  const queries = {
+    links: useQuery(
+      ["links", { profile_id: user?.id }],
+      () => {
+        return api.links.list({ profile_id: user?.id });
+      },
+      {
+        enabled: !!user?.id,
+      }
+    ),
+  };
+
   return (
     <Box>
       <Flex justify="space-between" mb={6}>
@@ -66,11 +81,18 @@ const LinkList: FC<LinkListProps> = ({ links }) => {
           </Button>
         </Link>
       </Flex>
-      <Stack spacing={4}>
-        {links.map((link) => (
-          <LinkItem key={link.id} link={link} />
-        ))}
-      </Stack>
+      {queries.links.isLoading && (
+        <Center h="300px">
+          <Spinner />
+        </Center>
+      )}
+      {queries.links.data && (
+        <Stack spacing={4}>
+          {queries.links.data.map((link) => (
+            <LinkItem key={link.id} link={link} />
+          ))}
+        </Stack>
+      )}
     </Box>
   );
 };
@@ -81,7 +103,7 @@ const Toolbar = () => {
   return (
     <Flex h="70px" align="center" justify="space-between" px={6}>
       <HStack spacing={3}>
-        <Image w={8} src="/logo.png" />
+        <Image w={10} src="/logo.png" />
         <Text
           letterSpacing={4}
           bgGradient="linear(to-l, var(--chakra-colors-pink-300),  var(--chakra-colors-pink-400))"
@@ -124,17 +146,6 @@ const Toolbar = () => {
 
 const Home: FC<{}> = (props) => {
   const { user } = Auth.useUser();
-  const queries = {
-    links: useQuery(
-      ["links", { profile_id: user?.id }],
-      () => {
-        return api.links.list({ profile_id: user?.id });
-      },
-      {
-        enabled: !!user?.id,
-      }
-    ),
-  };
 
   return (
     <Box>
@@ -142,7 +153,7 @@ const Home: FC<{}> = (props) => {
       {user && (
         <Box py={24} px={8}>
           <Box maxW="700px" margin="0 auto">
-            {queries.links.data && <LinkList links={queries.links.data} />}
+            <LinkList />
           </Box>
         </Box>
       )}

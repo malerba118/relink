@@ -10,6 +10,9 @@ const config = {
 
 // 3. extend the theme
 const theme = extendTheme({
+  shadows: {
+    outline: "0 0 0 3px var(--chakra-colors-pink-300)",
+  },
   components: {
     Input: {
       sizes: {
@@ -19,12 +22,18 @@ const theme = extendTheme({
           },
         },
       },
+      defaultProps: {
+        focusBorderColor: "pink.300",
+      },
     },
     Textarea: {
       sizes: {
         lg: {
           fontSize: "md",
         },
+      },
+      defaultProps: {
+        focusBorderColor: "pink.300",
       },
     },
     Tooltip: {
@@ -34,6 +43,9 @@ const theme = extendTheme({
       },
     },
     Button: {
+      defaultProps: {
+        focusBorderColor: "pink.300",
+      },
       baseStyle: {
         bgColor: "pink.200",
         color: "pink.900",
