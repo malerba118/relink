@@ -6,7 +6,7 @@ import { supabase } from "@/client/api/supabase";
 import theme from "../theme";
 import { ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { purple } from "@mui/material/colors";
+import { pink } from "@mui/material/colors";
 import {
   QueryCache,
   QueryClient,
@@ -32,7 +32,7 @@ const muiTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: purple[200],
+      main: pink[200],
     },
   },
 });

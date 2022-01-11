@@ -11,6 +11,7 @@ import {
   HStack,
   IconButton,
   Tooltip,
+  Image,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useQuery } from "react-query";
@@ -29,6 +30,7 @@ const LinkItem: FC<LinkItemProps> = ({ link }) => {
       <HStack pos="absolute" top={2} right={2}>
         <Tooltip label="Edit Link" placement="top">
           <IconButton
+            colorScheme="whiteAlpha"
             aria-label="Edit Link"
             icon={<EditIcon />}
             onClick={() =>
@@ -59,7 +61,7 @@ const LinkList: FC<LinkListProps> = ({ links }) => {
       <Flex justify="space-between" mb={6}>
         <Heading>Your Links</Heading>
         <Link href="/create" passHref>
-          <Button colorScheme="purple" variant="outline" size="md">
+          <Button colorScheme="pink" variant="solid" size="md">
             Create a Link
           </Button>
         </Link>
@@ -77,19 +79,25 @@ const Toolbar = () => {
   const { user } = Auth.useUser();
 
   return (
-    <Flex
-      h="64px"
-      borderBottom="1px solid rgba(255,255,255,.1)"
-      align="center"
-      justify="space-between"
-      px={6}
-    >
-      <Box>Logo</Box>
+    <Flex h="70px" align="center" justify="space-between" px={6}>
+      <HStack spacing={3}>
+        <Image w={8} src="/logo.png" />
+        <Text
+          letterSpacing={4}
+          bgGradient="linear(to-l, var(--chakra-colors-pink-300),  var(--chakra-colors-pink-400))"
+          bgClip="text"
+          fontSize="lg"
+          fontWeight="bold"
+        >
+          relink.page
+        </Text>
+      </HStack>
       <Box>
         {!user && (
           <Button
             key="sign-in"
-            colorScheme="purple"
+            colorScheme="pink"
+            variant="ghost"
             onClick={() => {
               api.auth.signIn();
             }}
@@ -100,7 +108,8 @@ const Toolbar = () => {
         {user && (
           <Button
             key="sign-out"
-            colorScheme="gray"
+            colorScheme="pink"
+            variant="ghost"
             onClick={() => {
               api.auth.signOut();
             }}

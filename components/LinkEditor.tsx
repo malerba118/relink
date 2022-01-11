@@ -77,7 +77,7 @@ const StepOne: FC<StepOneProps> = ({ values, onChange, onNext }) => {
           <Box>
             <Button
               onClick={() => onNext()}
-              colorScheme="purple"
+              colorScheme="pink"
               isDisabled={!isValidURL(values.redirectUrl)}
             >
               Next
@@ -175,10 +175,12 @@ const StepTwo: FC<StepTwoProps> = ({ values, onChange, onNext, onBack }) => {
               </Box>
             </Stack>
             <HStack spacing={3}>
-              <Button onClick={() => onBack()}>Back</Button>
+              <Button colorScheme="whiteAlpha" onClick={() => onBack()}>
+                Back
+              </Button>
               <Button
                 onClick={() => onNext()}
-                colorScheme="purple"
+                colorScheme="pink"
                 isDisabled={!values.title || !values.description}
               >
                 Next
@@ -320,10 +322,12 @@ const StepThree: FC<StepThreeProps> = ({
             /> */}
           </Box>
           <HStack spacing={3}>
-            <Button onClick={() => onBack()}>Back</Button>
+            <Button colorScheme="whiteAlpha" onClick={() => onBack()}>
+              Back
+            </Button>
             <Button
               onClick={() => onGenerate()}
-              colorScheme="purple"
+              colorScheme="pink"
               isDisabled={availability !== AvailbilityState.Available}
               isLoading={createLinkMutation.isLoading}
             >
@@ -377,6 +381,7 @@ const StepFour: FC<StepFourProps> = ({ link }) => {
           </Box>
           <HStack spacing={3}>
             <Button
+              colorScheme="whiteAlpha"
               onClick={() => {
                 router.push("/");
               }}

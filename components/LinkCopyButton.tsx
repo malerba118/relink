@@ -18,6 +18,7 @@ const LinkCopyButton: FC<LinkCopyButtonProps> = ({ link }) => {
   return (
     <Tooltip placement="top" label={hasCopied ? "Copied!" : "Copy Link"}>
       <IconButton
+        colorScheme="whiteAlpha"
         onClick={(e) => {
           e.preventDefault();
           onCopy();
