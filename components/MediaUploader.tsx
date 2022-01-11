@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { FileRejection, useDropzone } from "react-dropzone";
 import { supabase } from "@/client/api/supabase";
 import { nanoid } from "nanoid";
 import { CloudUploadIcon } from "@heroicons/react/solid";
 import { useMutation } from "react-query";
-import { Spinner, Image, Box, Stack, Text } from "@chakra-ui/react";
+import { Spinner, Image, Box, Stack, Text, useToast } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
 
@@ -46,6 +46,7 @@ export function MediaUploader({
   prompt = "Upload an Image",
 }: MediaUploaderProps) {
   const [hovered, setHovered] = useState(false);
+  const toast = useToast();
 
   const upsertFile = (path: string, file: any) => {
     return supabase.storage
@@ -73,7 +74,7 @@ export function MediaUploader({
     }
   );
 
-  const onDrop = async (acceptedFiles: File[]) => {
+  const onDropAccepted = async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     const newPathArray = [];
     if (typeof folder === "string" && !!folder) {
@@ -84,7 +85,26 @@ export function MediaUploader({
 
     mutation.mutate({ path: newPath, file });
   };
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+  const onDropRejected = async (rejectedFiles: FileRejection[]) => {
+    toast({
+      title: "Error Uploading Image",
+      description:
+        rejectedFiles[0]?.errors.at(0)?.code === "file-too-large"
+          ? "File exceeds 5mb limit"
+          : rejectedFiles[0]?.errors.at(0)?.message,
+      status: "error",
+      duration: 3000,
+    });
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    multiple: false,
+    onDropAccepted,
+    onDropRejected,
+    maxSize: 5000000, // 5mb
+    accept: ["image/png", "image/jpeg", "image/jpg", "image/gif"],
+  });
 
   const inputProps = getInputProps();
 

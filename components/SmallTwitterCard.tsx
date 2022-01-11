@@ -22,7 +22,7 @@ export const SmallTwitterCard: React.FC<SmallTwitterCardProps> = ({
       overflow="hidden"
       border="1px solid rgb(47, 51, 54)"
     >
-      <AspectRatio ratio={1 / 1} h="132px" w="132px">
+      <AspectRatio ratio={1 / 1} h="132px" w="132px" minW="132px">
         <Image src={image} alt="" objectFit="cover" />
       </AspectRatio>
       <Flex h="132px" alignItems="center">

@@ -1,0 +1,190 @@
+import { FC } from "react";
+import * as api from "@/client/api";
+import { Auth } from "@supabase/ui";
+import {
+  Button,
+  Box,
+  Flex,
+  Heading,
+  Stack,
+  Text,
+  HStack,
+  Image,
+  Icon,
+} from "@chakra-ui/react";
+import TweetEmbed from "react-tweet-embed";
+import { BsLink45Deg as LinkIcon } from "react-icons/bs";
+import { FaLongArrowAltRight as ArrowRightIcon } from "react-icons/fa";
+
+const Toolbar = () => {
+  const { user } = Auth.useUser();
+
+  return (
+    <Flex h="70px" align="center" justify="space-between" pl={6} pr={4}>
+      <HStack spacing={2}>
+        <Image w={10} src="/logo.png" />
+        <Text
+          letterSpacing={4}
+          bgGradient="linear(to-l, var(--chakra-colors-pink-300),  var(--chakra-colors-pink-300))"
+          bgClip="text"
+          fontSize="lg"
+          fontWeight="bold"
+        >
+          relink.page
+        </Text>
+      </HStack>
+      <Box>
+        {!user && (
+          <Button
+            key="sign-in"
+            colorScheme="pink"
+            variant="ghost"
+            onClick={() => {
+              api.auth.signIn();
+            }}
+          >
+            Sign In With Twitter
+          </Button>
+        )}
+        {user && (
+          <Button
+            key="sign-out"
+            colorScheme="pink"
+            variant="ghost"
+            onClick={() => {
+              api.auth.signOut();
+            }}
+          >
+            Sign Out
+          </Button>
+        )}
+      </Box>
+    </Flex>
+  );
+};
+
+const Home: FC<{}> = (props) => {
+  const { user } = Auth.useUser();
+
+  return (
+    <Box minH="100vh">
+      <Toolbar />
+      {!user && (
+        <Box py={0}>
+          <Stack spacing={8} p={12} bg="black">
+            <Heading
+              py={2}
+              maxW="800px"
+              size="2xl"
+              bgClip="text"
+              bgGradient="linear(to-l, var(--chakra-colors-pink-100),  var(--chakra-colors-pink-100))"
+              fontWeight="extrabold"
+              style={{
+                WebkitTextStrokeWidth: 2,
+                WebkitTextStrokeColor: "currentColor",
+              }}
+              letterSpacing={2}
+              opacity={0.9}
+            >
+              Generate links that you can{" "}
+              <Text
+                as="span"
+                bgClip="text"
+                bgGradient="linear(to-l, var(--chakra-colors-pink-300),  var(--chakra-colors-pink-300))"
+              >
+                proudly share
+              </Text>{" "}
+              on Twitter
+            </Heading>
+            <HStack alignItems="center" wrap="wrap">
+              <Heading fontSize="13px" color="pink.50" opacity={0.8}>
+                <Icon mb="-11px" fontSize="3xl" as={LinkIcon} />{" "}
+                https://lpi.oregonstate.edu/mic/dietary-factors
+              </Heading>
+              <Box>
+                <Icon
+                  mb="-8px"
+                  fontSize="lg"
+                  color="gray.300"
+                  as={ArrowRightIcon}
+                />
+              </Box>
+
+              <Heading fontSize="13px" color="pink.50" opacity={0.8}>
+                <Icon mb="-11px" fontSize="3xl" as={LinkIcon} />{" "}
+                https://relink.page/links/dietary-factors
+              </Heading>
+            </HStack>
+            <Box>
+              <Button
+                key="sign-in"
+                colorScheme="pink"
+                variant="solid"
+                onClick={() => {
+                  api.auth.signIn();
+                }}
+              >
+                Sign In With Twitter
+              </Button>
+            </Box>
+          </Stack>
+          <Stack
+            pos="relative"
+            spacing={4}
+            w="100%"
+            maxW="fit-content"
+            margin="0 auto"
+            my={12}
+          >
+            <Image
+              h="160px"
+              src="/first-arrow.svg"
+              top={"60px"}
+              left={"-110px"}
+              pos="absolute"
+              display={{ base: "none", md: "inline-block" }}
+            />
+            <Image
+              h="160px"
+              src="/second-arrow.svg"
+              top={"418px"}
+              right={"-110px"}
+              pos="absolute"
+              display={{ base: "none", md: "inline-block" }}
+            />
+            <Heading color="pink.300" size="2xl">
+              turn this
+            </Heading>
+            <Box
+              w={{ base: "320px", md: "550px" }}
+              h={{ base: "308px", md: "368px" }}
+              bg="black"
+              rounded="xl"
+            >
+              <TweetEmbed
+                options={{ theme: "dark", conversation: "none" }}
+                id="1480932188824739847"
+              />
+            </Box>
+            <Heading color="pink.300" size="2xl" textAlign="right">
+              into this
+            </Heading>
+            <Box
+              w={{ base: "320px", md: "550px" }}
+              h={{ base: "455px", md: "617px" }}
+              bg="black"
+              rounded="xl"
+            >
+              <TweetEmbed
+                options={{ theme: "dark", conversation: "none" }}
+                id="1480932426725699595"
+              />
+            </Box>
+          </Stack>
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+export default Home;

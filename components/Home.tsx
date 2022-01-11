@@ -20,6 +20,7 @@ import { useQuery } from "react-query";
 import LinkCopyButton from "./LinkCopyButton";
 import { MdEdit as EditIcon } from "react-icons/md";
 import { useRouter } from "next/router";
+import TweetEmbed from "react-tweet-embed";
 
 interface LinkItemProps {
   link: api.types.Link;
@@ -45,7 +46,9 @@ const LinkItem: FC<LinkItemProps> = ({ link }) => {
       <Heading size="md" color="gray.50">
         {link.title}
       </Heading>
-      <Text color="gray.300">{link.description}</Text>
+      <Text w="100%" color="gray.300" noOfLines={2} isTruncated>
+        {link.description}
+      </Text>
       <Text fontWeight="bold" color="gray.500">
         {link.redirect_url}
       </Text>
@@ -72,7 +75,15 @@ const LinkList: FC<LinkListProps> = ({}) => {
   return (
     <Box>
       <Flex justify="space-between" mb={6}>
-        <Heading>Your Links</Heading>
+        <Heading
+          style={{
+            letterSpacing: 1,
+            WebkitTextStrokeWidth: 1,
+            WebkitTextStrokeColor: "currentColor",
+          }}
+        >
+          Your Links
+        </Heading>
         <Link href="/create" passHref>
           <Button colorScheme="pink" variant="solid" size="md">
             Create a Link
@@ -83,6 +94,11 @@ const LinkList: FC<LinkListProps> = ({}) => {
         <Center h="300px">
           <Spinner />
         </Center>
+      )}
+      {queries.links.data?.length === 0 && (
+        <Text fontWeight="bold" color="gray.500">
+          You have not created any links yet.
+        </Text>
       )}
       {queries.links.data && (
         <Stack spacing={4}>
@@ -99,12 +115,12 @@ const Toolbar = () => {
   const { user } = Auth.useUser();
 
   return (
-    <Flex h="70px" align="center" justify="space-between" px={6}>
-      <HStack spacing={3}>
+    <Flex h="70px" align="center" justify="space-between" pl={6} pr={4}>
+      <HStack spacing={2}>
         <Image w={10} src="/logo.png" />
         <Text
           letterSpacing={4}
-          bgGradient="linear(to-l, var(--chakra-colors-pink-300),  var(--chakra-colors-pink-400))"
+          bgGradient="linear(to-l, var(--chakra-colors-pink-300),  var(--chakra-colors-pink-300))"
           bgClip="text"
           fontSize="lg"
           fontWeight="bold"
@@ -143,18 +159,16 @@ const Toolbar = () => {
 };
 
 const Home: FC<{}> = (props) => {
-  const { user } = Auth.useUser();
+  // const { user } = Auth.useUser();
 
   return (
-    <Box>
+    <Box minH="100vh">
       <Toolbar />
-      {user && (
-        <Box py={24} px={8}>
-          <Box maxW="700px" margin="0 auto">
-            <LinkList />
-          </Box>
+      <Box py={{ base: 6, md: 24 }} px={{ base: 6, md: 8 }}>
+        <Box maxW="700px" margin="0 auto">
+          <LinkList />
         </Box>
-      )}
+      </Box>
     </Box>
   );
 };

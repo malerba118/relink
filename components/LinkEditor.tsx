@@ -181,7 +181,9 @@ const StepTwo: FC<StepTwoProps> = ({ values, onChange, onNext, onBack }) => {
               <Button
                 onClick={() => onNext()}
                 colorScheme="pink"
-                isDisabled={!values.title || !values.description}
+                isDisabled={
+                  !values.title || !values.description || !values.image
+                }
               >
                 Next
               </Button>

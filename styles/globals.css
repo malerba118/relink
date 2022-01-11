@@ -15,3 +15,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.twitter-tweet {
+  margin: 0 !important;
+}
