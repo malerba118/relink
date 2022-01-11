@@ -7,9 +7,23 @@ import theme from "../theme";
 import { ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { purple } from "@mui/material/colors";
-import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import {
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "react-query";
+import * as api from "@/client/api";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error: any) => {
+      if (error?.message === "JWT expired") {
+        api.auth.signOut().finally(() => window.location.reload());
+      }
+    },
+  }),
+});
 
 const muiTheme = createTheme({
   typography: {

@@ -3,6 +3,7 @@ import { Center, Heading, Text, Box } from "@chakra-ui/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect } from "react";
+import { inferRedirectUrl } from "utils";
 
 interface LinkRedirectProps {
   link: api.types.Link;
@@ -11,11 +12,7 @@ interface LinkRedirectProps {
 export const LinkRedirect: React.FC<LinkRedirectProps> = ({ link }) => {
   useEffect(() => {
     // window.location.href = link.redirect_url;
-    if (link.redirect_url.includes("://")) {
-      window.location.href = link.redirect_url;
-    } else {
-      window.location.href = "https://" + link.redirect_url;
-    }
+    window.location.href = inferRedirectUrl(link.redirect_url);
   }, [link.redirect_url]);
 
   return (
@@ -32,8 +29,8 @@ export const LinkRedirect: React.FC<LinkRedirectProps> = ({ link }) => {
         <Box>
           <Text>
             Redirecting to{" "}
-            <Link href={link.redirect_url} passHref={false}>
-              <Text as="span" textDecoration="underline">
+            <Link href={inferRedirectUrl(link.redirect_url)} passHref>
+              <Text as="span" textDecoration="underline" cursor="pointer">
                 {link.redirect_url}
               </Text>
             </Link>

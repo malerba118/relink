@@ -1,9 +1,8 @@
 import * as api from "@/client/api";
 
 // will need this to bust link cache (can add param ?t=getTimeOfDayInSeconds())
-export const getTimeOfDayInSeconds = (): number => {
-  const now = new Date();
-  return now.getHours() * 60 * 60 + now.getMinutes() * 60 + now.getSeconds();
+export const getTimeOfDayInSeconds = (date: Date): number => {
+  return date.getHours() * 60 * 60 + date.getMinutes() * 60 + date.getSeconds();
 };
 
 export function isValidURL(value: string) {
@@ -14,10 +13,25 @@ export function isValidURL(value: string) {
 }
 
 export const buildUrlFromLink = (link: api.types.Link) => {
+  const updatedAt = new Date(link.updated_at);
+  const seconds = getTimeOfDayInSeconds(updatedAt);
   if (process.env.NODE_ENV === "development") {
-    return `http://localhost:3000/links/${link.slug}`;
+    return `http://localhost:3000/links/${encodeURIComponent(
+      link.slug
+    )}?t=${seconds}`;
   } else {
-    return `https://relink.page/links/${link.slug}`;
+    return `https://relink.page/links/${encodeURIComponent(
+      link.slug
+    )}?t=${seconds}`;
+  }
+};
+
+// prepend https if no protocol specified
+export const inferRedirectUrl = (redirectUrl: string) => {
+  if (redirectUrl.includes("://")) {
+    return redirectUrl;
+  } else {
+    return "https://" + redirectUrl;
   }
 };
 

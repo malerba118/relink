@@ -9,25 +9,39 @@ import {
   Stack,
   Text,
   HStack,
+  IconButton,
+  Tooltip,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useQuery } from "react-query";
 import LinkCopyButton from "./LinkCopyButton";
+import { MdEdit as EditIcon } from "react-icons/md";
+import { useRouter } from "next/router";
 
 interface LinkItemProps {
   link: api.types.Link;
 }
 
 const LinkItem: FC<LinkItemProps> = ({ link }) => {
+  const router = useRouter();
   return (
     <Stack pos="relative" p={6} bg="whiteAlpha.50" rounded="lg">
       <HStack pos="absolute" top={2} right={2}>
+        <Tooltip label="Edit Link" placement="top">
+          <IconButton
+            aria-label="Edit Link"
+            icon={<EditIcon />}
+            onClick={() =>
+              router.push(`/edit/${encodeURIComponent(link.slug)}`)
+            }
+          />
+        </Tooltip>
         <LinkCopyButton link={link} />
       </HStack>
-      <Heading size="sm" color="gray.50">
+      <Heading size="md" color="gray.50">
         {link.title}
       </Heading>
-      <Text color="gray.500">{link.description}</Text>
+      <Text color="gray.300">{link.description}</Text>
       <Text fontWeight="bold" color="gray.500">
         {link.redirect_url}
       </Text>
@@ -44,7 +58,7 @@ const LinkList: FC<LinkListProps> = ({ links }) => {
     <Box>
       <Flex justify="space-between" mb={6}>
         <Heading>Your Links</Heading>
-        <Link href="/create" passHref={false}>
+        <Link href="/create" passHref>
           <Button colorScheme="purple" variant="outline" size="md">
             Create a Link
           </Button>

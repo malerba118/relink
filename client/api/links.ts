@@ -16,7 +16,8 @@ export async function isAvailable({ slug }: IsAvailableParams) {
   return !response.data?.length;
 }
 
-interface CreateParams {
+interface UpsertParams {
+  id: string;
   slug: string;
   redirect_url: string;
   title: string;
@@ -25,10 +26,10 @@ interface CreateParams {
   card_type: string;
 }
 
-export async function create(payload: CreateParams) {
+export async function upsert(payload: UpsertParams) {
   const response = await supabase
     .from<Link>("links")
-    .insert({
+    .upsert({
       ...payload,
       profile_id: supabase.auth.user()?.id,
     })
