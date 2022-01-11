@@ -53,11 +53,9 @@ const LinkItem: FC<LinkItemProps> = ({ link }) => {
   );
 };
 
-interface LinkListProps {
-  links: api.types.Link[];
-}
+interface LinkListProps {}
 
-const LinkList: FC<LinkListProps> = ({ links }) => {
+const LinkList: FC<LinkListProps> = ({}) => {
   const { user } = Auth.useUser();
   const queries = {
     links: useQuery(

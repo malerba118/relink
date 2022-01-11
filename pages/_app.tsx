@@ -6,13 +6,7 @@ import { supabase } from "@/client/api/supabase";
 import theme from "../theme";
 import { ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { pink } from "@mui/material/colors";
-import {
-  QueryCache,
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "react-query";
+import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
 import * as api from "@/client/api";
 
 const queryClient = new QueryClient({
@@ -32,7 +26,7 @@ const muiTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: pink[200],
+      main: "#fda4af",
     },
   },
 });
