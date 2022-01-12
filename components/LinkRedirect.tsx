@@ -19,8 +19,8 @@ export const LinkRedirect: React.FC<LinkRedirectProps> = ({ link }) => {
     <>
       <Head>
         <meta name="twitter:card" content={link.card_type} />
-        <meta name="twitter:site" content="@vernosapp" />
-        <meta name="twitter:creator" content="@vernosapp" />
+        <meta name="twitter:site" content="@relink_page" />
+        <meta name="twitter:creator" content="@relink_page" />
         <meta name="twitter:title" content={link.title} />
         <meta name="twitter:description" content={link.description} />
         <meta name="twitter:image" content={link.image} />
