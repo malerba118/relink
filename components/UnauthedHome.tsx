@@ -23,13 +23,14 @@ const Toolbar = () => {
   return (
     <Flex h="70px" align="center" justify="space-between" pl={6} pr={4}>
       <HStack spacing={2}>
-        <Image w={10} src="/logo.png" />
+        <Image w={8} src="/logo.png" />
         <Text
           letterSpacing={4}
           bgGradient="linear(to-l, var(--chakra-colors-pink-300),  var(--chakra-colors-pink-300))"
           bgClip="text"
           fontSize="lg"
           fontWeight="bold"
+          display={{ base: "none", md: "block" }}
         >
           relink.page
         </Text>
@@ -77,7 +78,7 @@ const Home: FC<{}> = (props) => {
           description: "Generate links that you can proudly share on Twitter.",
           images: [
             {
-              url: "/relink.png",
+              url: "https://relink.page/relink.png",
               width: 2229,
               height: 1701,
               alt: "relink.page",
@@ -91,12 +92,29 @@ const Home: FC<{}> = (props) => {
           site: "@relink_page",
           cardType: "summary_large_image",
         }}
+        additionalMetaTags={[
+          {
+            name: "twitter:card",
+            content: "summary_large_image",
+          },
+          {
+            name: "twitter:title",
+            content: "relink.page",
+          },
+          {
+            name: "twitter:description",
+            content: "Generate links that you can proudly share on Twitter.",
+          },
+          {
+            name: "twitter:image",
+            content: "https://relink.page/relink.png",
+          },
+        ]}
       />
       <Toolbar />
       <Box py={0}>
         <Stack spacing={8} p={12} bg="black">
           <Heading
-            py={2}
             maxW="800px"
             size="2xl"
             bgClip="text"

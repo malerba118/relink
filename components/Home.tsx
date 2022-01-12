@@ -117,13 +117,14 @@ const Toolbar = () => {
   return (
     <Flex h="70px" align="center" justify="space-between" pl={6} pr={4}>
       <HStack spacing={2}>
-        <Image w={10} src="/logo.png" />
+        <Image w={8} src="/logo.png" />
         <Text
           letterSpacing={4}
           bgGradient="linear(to-l, var(--chakra-colors-pink-300),  var(--chakra-colors-pink-300))"
           bgClip="text"
           fontSize="lg"
           fontWeight="bold"
+          display={{ base: "none", md: "block" }}
         >
           relink.page
         </Text>
