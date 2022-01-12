@@ -1,5 +1,5 @@
 import * as api from "@/client/api";
-import { Center, Heading, Text, Box } from "@chakra-ui/react";
+import { Center, Text, HStack, Image, Stack } from "@chakra-ui/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -26,16 +26,28 @@ export const LinkRedirect: React.FC<LinkRedirectProps> = ({ link }) => {
         <meta name="twitter:image" content={link.image} />
       </Head>
       <Center flexDirection="column" h="100vh">
-        <Box>
-          <Text>
-            Redirecting to{" "}
-            <Link href={inferRedirectUrl(link.redirect_url)} passHref>
-              <Text as="span" textDecoration="underline" cursor="pointer">
-                {link.redirect_url}
-              </Text>
-            </Link>
+        <Stack align="center">
+          <HStack spacing={2}>
+            <Image w={8} src="/logo.png" />
+            <Text
+              letterSpacing={4}
+              bgGradient="linear(to-l, var(--chakra-colors-pink-300),  var(--chakra-colors-pink-300))"
+              bgClip="text"
+              fontSize="lg"
+              fontWeight="bold"
+            >
+              relink.page
+            </Text>
+          </HStack>
+          <Text fontWeight="semibold" textAlign="center" px={4}>
+            Redirecting to
           </Text>
-        </Box>
+          <Link href={inferRedirectUrl(link.redirect_url)} passHref>
+            <Text textDecoration="underline" cursor="pointer">
+              {link.redirect_url}
+            </Text>
+          </Link>
+        </Stack>
       </Center>
     </>
   );
