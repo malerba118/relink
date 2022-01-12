@@ -113,7 +113,7 @@ const Home: FC<{}> = (props) => {
       />
       <Toolbar />
       <Box py={0}>
-        <Stack spacing={8} p={12} bg="black">
+        <Stack spacing={8} p={{ base: 6, md: 12 }} bg="black">
           <Heading
             maxW="800px"
             size="2xl"
@@ -125,7 +125,7 @@ const Home: FC<{}> = (props) => {
               WebkitTextStrokeColor: "currentColor",
             }}
             letterSpacing={2}
-            opacity={0.9}
+            opacity={0.95}
             lineHeight={1.2}
           >
             Generate links that you can{" "}
