@@ -118,7 +118,7 @@ const Home: FC<{}> = (props) => {
             maxW="800px"
             size="2xl"
             bgClip="text"
-            bgGradient="linear(to-l, var(--chakra-colors-pink-100),  var(--chakra-colors-pink-100))"
+            bgGradient="linear(to-l, var(--chakra-colors-pink-50),  var(--chakra-colors-pink-50))"
             fontWeight="extrabold"
             style={{
               WebkitTextStrokeWidth: 2,
